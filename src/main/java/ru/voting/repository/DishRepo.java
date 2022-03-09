@@ -3,8 +3,12 @@ package ru.voting.repository;
 
 import ru.voting.model.Dish;
 
-public interface DishRepo {
-    Dish save(Dish dish);
+import java.util.Collection;
 
-    Dish delete(int dishId);
+public interface DishRepo {
+    Dish save(Dish dish, int restaurantId);
+
+    boolean delete(int dishId);
+
+    Collection<Dish> getAllByRestaurantId(int restaurantId);
 }

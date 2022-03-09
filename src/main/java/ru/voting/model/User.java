@@ -1,5 +1,9 @@
 package ru.voting.model;
 
+import org.springframework.util.CollectionUtils;
+
+import java.util.Collection;
+import java.util.EnumSet;
 import java.util.Set;
 
 public class User extends AbstractBaseEntity{
@@ -36,7 +40,18 @@ public class User extends AbstractBaseEntity{
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setRoles(Collection<Role> roles) {
+        this.roles = CollectionUtils.isEmpty(roles) ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", voted=" + voted +
+                ", roles=" + roles +
+                '}';
     }
 }
