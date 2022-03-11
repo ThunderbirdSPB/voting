@@ -8,6 +8,7 @@ INSERT INTO users (email, password)
 VALUES ('user1@yandex.ru', 'password'),
        ('user2@yandex.ru', 'password'),
        ('user3@yandex.ru', 'password'),
+       ('user4@yandex.ru', 'password'),
        ('admin@gmail.com', 'admin');
 
 INSERT INTO user_roles (role, user_id)
@@ -15,7 +16,8 @@ VALUES ('USER', 0),
        ('USER', 1),
        ('USER', 2),
        ('USER', 3),
-       ('ADMIN', 3);
+       ('USER', 4),
+       ('ADMIN', 4);
 
 INSERT INTO restaurant (name)
 VALUES ('DODO Pizza'),
