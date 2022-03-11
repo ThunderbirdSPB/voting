@@ -14,13 +14,15 @@ import ru.voting.repository.UserRepo;
 import java.util.List;
 import java.util.Set;
 
+import static ru.voting.util.ValidationUtil.*;
+
 @Repository
 public class UserRepoJdbcImpl implements UserRepo {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertUser;
     private static final BeanPropertyRowMapper<User> ROW_MAPPER = BeanPropertyRowMapper.newInstance(User.class);
 
-    private static final String GET_ALL_USERS = "SELECT * FROM users WHERE id = ?";
+    private static final String GET_USER_BY_ID = "SELECT * FROM users WHERE id = ?";
 
     public UserRepoJdbcImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -31,8 +33,10 @@ public class UserRepoJdbcImpl implements UserRepo {
 
     @Override
     public User save(User user) {
+        validate(user);
         MapSqlParameterSource map = new MapSqlParameterSource()
                 .addValue("email", user.getEmail())
+                .addValue("voted", user.isVoted())
                 .addValue("password", user.getPassword());
         user.setId(insertUser.executeAndReturnKey(map).intValue());
         insertRoles(user);
@@ -42,8 +46,9 @@ public class UserRepoJdbcImpl implements UserRepo {
 
     @Override
     public User get(int userId) {
-        List<User> users = jdbcTemplate.query(GET_ALL_USERS, ROW_MAPPER, userId);
-        return setRoles(DataAccessUtils.singleResult(users));
+        User user = DataAccessUtils.singleResult(jdbcTemplate.query(GET_USER_BY_ID, ROW_MAPPER, userId));
+        setRoles(user);
+        return checkNotFoundWithId(user, userId);
     }
 
     private void insertRoles(User user) {

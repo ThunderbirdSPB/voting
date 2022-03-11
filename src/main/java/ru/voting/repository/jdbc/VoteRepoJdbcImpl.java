@@ -2,9 +2,10 @@ package ru.voting.repository.jdbc;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowCountCallbackHandler;
 import org.springframework.stereotype.Repository;
 import ru.voting.repository.VoteRepo;
+
+import static ru.voting.util.ValidationUtil.*;
 
 @Repository
 public class VoteRepoJdbcImpl implements VoteRepo {
@@ -22,8 +23,8 @@ public class VoteRepoJdbcImpl implements VoteRepo {
     }
 
     @Override
-    public boolean delete(int userId, int restaurantId) {
-        return jdbcTemplate.update(DELETE_VOTE, userId, restaurantId) != 0;
+    public void delete(int userId, int restaurantId) {
+        checkNotFound(jdbcTemplate.update(DELETE_VOTE, userId, restaurantId) != 0, "Wrong userId or restaurantId");
     }
 
     @Override

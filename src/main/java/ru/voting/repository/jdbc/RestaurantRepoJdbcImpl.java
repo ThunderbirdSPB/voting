@@ -1,5 +1,6 @@
 package ru.voting.repository.jdbc;
 
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -10,6 +11,8 @@ import ru.voting.repository.RestaurantRepo;
 
 import java.util.Collection;
 
+import static ru.voting.util.ValidationUtil.*;
+
 @Repository
 public class RestaurantRepoJdbcImpl implements RestaurantRepo {
     private final JdbcTemplate jdbcTemplate;
@@ -18,6 +21,7 @@ public class RestaurantRepoJdbcImpl implements RestaurantRepo {
 
     private static final String DELETE_RESTAURANT = "DELETE FROM restaurant WHERE id=?";
     private static final String GET_ALL_RESTAURANTS = "SELECT * FROM restaurant";
+    private static final String GET_RESTAURANT_BY_ID = "SELECT * FROM restaurant WHERE id=?";
 
     public RestaurantRepoJdbcImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -28,6 +32,7 @@ public class RestaurantRepoJdbcImpl implements RestaurantRepo {
 
     @Override
     public Restaurant save(Restaurant restaurant) {
+        validate(restaurant);
         MapSqlParameterSource map = new MapSqlParameterSource()
                 .addValue("name", restaurant.getName())
                 .addValue("votes", restaurant.getVotes());
@@ -36,12 +41,18 @@ public class RestaurantRepoJdbcImpl implements RestaurantRepo {
     }
 
     @Override
-    public boolean delete(int restaurantId) {
-        return jdbcTemplate.update(DELETE_RESTAURANT, restaurantId) != 0;
+    public void delete(int restaurantId) {
+        checkNotFoundWithId(jdbcTemplate.update(DELETE_RESTAURANT, restaurantId) != 0, restaurantId);
     }
 
     @Override
     public Collection<Restaurant> getAll() {
         return jdbcTemplate.query(GET_ALL_RESTAURANTS, ROW_MAPPER);
+    }
+
+    @Override
+    public Restaurant getById(int restaurantId) {
+        Restaurant restaurant = DataAccessUtils.singleResult(jdbcTemplate.query(GET_RESTAURANT_BY_ID, ROW_MAPPER, restaurantId));
+        return checkNotFoundWithId(restaurant, restaurantId);
     }
 }

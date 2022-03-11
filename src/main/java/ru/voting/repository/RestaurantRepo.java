@@ -7,7 +7,9 @@ import java.util.Collection;
 public interface RestaurantRepo {
     Restaurant save(Restaurant restaurant);
 
-    boolean delete(int restaurantId);
+    void delete(int restaurantId);
 
     Collection<Restaurant> getAll();
+
+    Restaurant getById(int restaurantId);
 }
