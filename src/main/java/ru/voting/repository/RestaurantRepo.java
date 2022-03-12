@@ -12,4 +12,10 @@ public interface RestaurantRepo {
     Collection<Restaurant> getAll();
 
     Restaurant getById(int restaurantId);
+
+    void addVote(int restaurantId);
+
+    void deleteVote(int restaurantId);
+
+    int getVotes(int restaurantId);
 }
