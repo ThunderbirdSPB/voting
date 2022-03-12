@@ -11,38 +11,43 @@ import static org.junit.jupiter.api.Assertions.*;
 import static ru.voting.UserTestData.*;
 import static ru.voting.RestaurantTestData.*;
 
-class VoteRepoJdbcImplTest extends AbstractRepoJdbcImplTest {
+class VoteRepoJdbcImplTest extends AbstractBaseTest {
     @Autowired
     VoteRepo repo;
 
     @Test
     void saveNotExistingRestaurantId() {
-        assertThrows(DataIntegrityViolationException.class, () -> repo.save(USER_ID, NOT_EXISTING_RESTAURANT_ID));
+        assertThrows(DataIntegrityViolationException.class, () -> repo.addVote(USER_ID, NOT_EXISTING_RESTAURANT_ID));
     }
 
     @Test
     void saveNotExistingUserId() {
-        assertThrows(DataIntegrityViolationException.class, () -> repo.save(NOT_EXISTING_USER_ID, RESTAURANT_ID));
+        assertThrows(DataIntegrityViolationException.class, () -> repo.addVote(NOT_EXISTING_USER_ID, RESTAURANT_ID));
     }
 
     @Test
     void saveTwoVotesForOneUser() {
-        repo.save(NOT_VOTED_USER_ID, RESTAURANT_ID);
-        assertThrows(DuplicateKeyException.class, () -> repo.save(NOT_VOTED_USER_ID, RESTAURANT_ID));
+        repo.addVote(NOT_VOTED_USER_ID, RESTAURANT_ID);
+        assertThrows(DuplicateKeyException.class, () -> repo.addVote(NOT_VOTED_USER_ID, RESTAURANT_ID));
     }
 
     @Test
     void saveWithValidData(){
-        assertTrue(repo.save(NOT_VOTED_USER_ID, RESTAURANT_ID));
+        assertTrue(repo.addVote(NOT_VOTED_USER_ID, RESTAURANT_ID));
     }
 
     @Test
     void deleteNotNotVotedUserId(){
-        assertThrows(NotFoundException.class, () -> repo.delete(NOT_VOTED_USER_ID, RESTAURANT_ID));
+        assertThrows(NotFoundException.class, () -> repo.deleteVote(NOT_VOTED_USER_ID, RESTAURANT_ID));
     }
 
     @Test
     void deleteWithValidData(){
-        repo.delete(USER_ID, RESTAURANT_ID);
+        repo.deleteVote(USER_ID, RESTAURANT_ID);
+    }
+
+    @Test
+    void getRestaurantIdByUserId(){
+        assertEquals(RESTAURANT_ID, repo.getRestaurantIdByUserId(USER_ID));
     }
 }

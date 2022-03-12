@@ -11,7 +11,7 @@ import ru.voting.util.exception.NotFoundException;
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.voting.UserTestData.*;
 
-class UserRepoJdbcImplTest extends AbstractRepoJdbcImplTest{
+class UserRepoJdbcImplTest extends AbstractBaseTest {
     @Autowired
     UserRepo repo;
 
@@ -54,5 +54,27 @@ class UserRepoJdbcImplTest extends AbstractRepoJdbcImplTest{
     @Test
     void getByExistingId(){
         assertEquals(repo.get(USER_ID), user);
+    }
+
+    @Test
+    void isUserVotedWithExistingId(){
+        assertFalse(repo.isUserVoted(USER_ID));
+    }
+
+    @Test
+    void isUserVotedWithNotExistingId(){
+        assertThrows(NotFoundException.class, () -> repo.isUserVoted(NOT_EXISTING_USER_ID));
+    }
+
+    @Test
+    void setUserVotedWithExistingId(){
+        assertFalse(repo.isUserVoted(USER_ID));
+        repo.setUserVoted(USER_ID, true);
+        assertTrue(repo.isUserVoted(USER_ID));
+    }
+
+    @Test
+    void setUserVotedWithNotExistingId(){
+        assertThrows(NotFoundException.class, () -> repo.setUserVoted(NOT_EXISTING_USER_ID, true));
     }
 }

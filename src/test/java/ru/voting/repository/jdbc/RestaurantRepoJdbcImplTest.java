@@ -12,7 +12,7 @@ import ru.voting.util.exception.NotFoundException;
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.voting.RestaurantTestData.*;
 
-class RestaurantRepoJdbcImplTest extends AbstractRepoJdbcImplTest{
+class RestaurantRepoJdbcImplTest extends AbstractBaseTest {
     @Autowired
     RestaurantRepo repo;
 
@@ -61,5 +61,39 @@ class RestaurantRepoJdbcImplTest extends AbstractRepoJdbcImplTest{
     void deleteByExistingId() {
         repo.delete(RESTAURANT_ID);
         assertThrows(NotFoundException.class, ()-> repo.getById(RESTAURANT_ID));
+    }
+
+    @Test
+    void addVoteToRestaurant(){
+        int votes = repo.getVotes(RESTAURANT_ID);
+        repo.addVote(RESTAURANT_ID);
+        assertEquals( 1, repo.getVotes(RESTAURANT_ID) - votes);
+    }
+
+    @Test
+    void addVoteToNotExistingRestaurant(){
+        assertThrows(NotFoundException.class, () -> repo.addVote(NOT_EXISTING_RESTAURANT_ID));
+    }
+
+    @Test
+    void deleteVoteFromRestaurant(){
+        int votes = repo.getVotes(RESTAURANT_ID);
+        repo.deleteVote(RESTAURANT_ID);
+        assertEquals( 1, votes - repo.getVotes(RESTAURANT_ID));
+    }
+
+    @Test
+    void deleteVoteFromNotExistingRestaurant(){
+        assertThrows(NotFoundException.class, () -> repo.deleteVote(NOT_EXISTING_RESTAURANT_ID));
+    }
+
+    @Test
+    void getVotesForRestaurant(){
+        assertEquals(VOTES, repo.getVotes(RESTAURANT_ID));
+    }
+
+    @Test
+    void getVotesForNotExistingRestaurant(){
+        assertThrows(NotFoundException.class, ()-> repo.getVotes(NOT_EXISTING_RESTAURANT_ID));
     }
 }

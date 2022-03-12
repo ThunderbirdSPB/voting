@@ -13,7 +13,7 @@ import ru.voting.util.exception.NotFoundException;
 import static ru.voting.RestaurantTestData.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class DishRepoJdbcImplTest extends AbstractRepoJdbcImplTest{
+class DishRepoJdbcImplTest extends AbstractBaseTest {
     @Autowired
     private DishRepo repo;
 
