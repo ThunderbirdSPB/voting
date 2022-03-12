@@ -10,7 +10,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import javax.sql.DataSource;
 
 @Configuration
-@ComponentScan("ru.voting.repository")
+@ComponentScan("ru.voting")
 public class DBConfig {
 
     @Bean

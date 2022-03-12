@@ -36,8 +36,3 @@ VALUES (0, '4 seasons', 2.2),
        (4, 'americano', 1.3),
        (4, 'cappuccino', 1.3),
        (4, 'latte', 1.35);
-
-INSERT INTO  vote(user_id, restaurant_id)
-VALUES (0, 1),
-       (1, 1),
-       (2, 1);
